@@ -89,20 +89,6 @@ public class UserDAOImpl implements UserDAO {
         setRolesFromDb(user);
         entityManager.persist(user);
     }
-
-    @EventListener(ApplicationReadyEvent.class)
-    @Transactional
-    public void addRoles() {
-        Role roleAdmin = new Role("ROLE_ADMIN");
-        entityManager.persist(roleAdmin);
-        Role roleUser = new Role("ROLE_USER");
-        entityManager.persist(roleUser);
-        User user = new User("admin", "admin", "admin@a.ru", "123", (byte) 30, Set.of(roleAdmin, roleUser));
-        entityManager.persist(user);
-        user = new User("user", "user", "user@a.ru", "456", (byte) 25, Set.of(roleUser));
-        entityManager.persist(user);
-    }
-
     private Role getRole(String name) {
         TypedQuery<Role> query = entityManager.createQuery("select r from Role r where r.name = :name", Role.class);
         query.setParameter("name", name);
@@ -113,7 +99,7 @@ public class UserDAOImpl implements UserDAO {
         Set<Role> roles = user.getRoles();
         Set<Role> rolesFromDb = new HashSet<>();
         for (Role role : roles) {
-            rolesFromDb.add(getRole(role.getName()));
+            rolesFromDb.add(roleDAO.getRole(role.getName()));
         }
         user.setRoles(rolesFromDb);
     }
