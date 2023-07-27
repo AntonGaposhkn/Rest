@@ -13,12 +13,16 @@ public class RoleDAOImpl implements RoleDAO {
 
     @PersistenceContext
     private EntityManager entityManager;
-
+    @Override
+    public void addRole(Role role) {
+        entityManager.persist(role);
+    }
     @Override
     public List<Role> getAll() {
         return entityManager.createQuery("select r from Role r", Role.class).getResultList();
     }
 
+    @Override
     public Role getRole(String name) {
         TypedQuery<Role> query = entityManager.createQuery("select r from Role r where r.name = :name", Role.class);
         query.setParameter("name", name);

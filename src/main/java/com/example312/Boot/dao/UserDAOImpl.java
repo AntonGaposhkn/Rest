@@ -22,6 +22,11 @@ public class UserDAOImpl implements UserDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
+    private final RoleDAO roleDAO;
+
+    public UserDAOImpl(RoleDAO roleDAO) {
+        this.roleDAO = roleDAO;
+    }
 
     @Override
     public List<User> getAllUsers() {
